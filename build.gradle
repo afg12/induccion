@@ -14,10 +14,16 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'jacoco'
 
 group = 'com.ceiba.induccion'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
+
+jacoco {
+    toolVersion = "0.8.1"
+    reportsDir = file("$buildDir/customJacocoReportDir")
+}
 
 repositories {
 	mavenCentral()
@@ -29,4 +35,20 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web-services')
 	runtime('com.h2database:h2')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+test {
+    jacoco {
+        append = false
+        destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
+        classDumpFile = file("$buildDir/jacoco/classpathdumps")
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("${buildDir}/jacocoHtml")
+    }
 }
